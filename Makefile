@@ -2,7 +2,7 @@ SOURCES =	main.cpp
 OBJECTS	=	$(SOURCES:.cpp=.o)
 TARGET	=	LasZipper
 LIBS	=	$(shell pdal-config --libs) \
-			/usr/local/Cellar/boost/1.72.0_3/lib/libboost_filesystem.dylib
+			/usr/local/Cellar/boost/1.73.0/lib/libboost_filesystem.dylib
 
 all: $(OBJECTS)
 	g++ -Wall -Wextra $(LIBS) -o $(TARGET) $(OBJECTS)

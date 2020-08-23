@@ -12,7 +12,6 @@
 #include <pdal/io/BufferReader.hpp>
 #include <pdal/io/LasReader.hpp>
 
-
 #include <boost/filesystem.hpp>
 
 void Help()
@@ -29,6 +28,7 @@ void OpenLas(pdal::LasReader *las_reader, const std::string lasName)
 	pdal::Options las_opts;
 	las_opts.add(las_opt);
 	las_reader->setOptions(las_opts);
+
 	pdal::PointTable table;
 	las_reader->prepare(table);
 	pdal::PointViewSet point_view_set = las_reader->execute(table);
@@ -50,7 +50,7 @@ void WriteLas(pdal::LasReader *las_reader, const std::string lasName)
 
 boost::filesystem::path CompressPath(boost::filesystem::path path)
 {
-		bool fileOk(false);
+	bool fileOk(false);
 	boost::filesystem::path compressPath;
 	int counter(0);
 	while(!fileOk)
@@ -73,6 +73,7 @@ boost::filesystem::path CompressPath(boost::filesystem::path path)
 		{
 			directory = "";
 		}
+
 		compressPath = boost::filesystem::path( directory + path.stem().string() + "_Compressed"+strCounter+".las");
 		if(boost::filesystem::exists(compressPath))
 		{
@@ -80,7 +81,6 @@ boost::filesystem::path CompressPath(boost::filesystem::path path)
 		}
 		else
 		{
-
 			fileOk = true;
 		}
 	}
@@ -119,22 +119,20 @@ boost::filesystem::path UncompressPath(boost::filesystem::path path)
 		}
 		else
 		{
-
 			fileOk = true;
 		}
 	}
-	
 	return uncompressPath;
 }
 
 int main(int argc, char *argv[]) {
-
-
 	if (argc < 3)
 	{
 		Help();
 		return 0;
 	}
+
+	// Are we compressing or decompressing las files ?
 	std::string option = argv[1];
 	bool compress = false, uncompress = false;
 	if (option == "-u")
@@ -153,10 +151,9 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-
+	// get the paths.
 	std::vector<boost::filesystem::path> paths;
 	for (int i = 2; i < argc; i++){
-		//std::cout << "i = " << i << std::endl;
 		paths.push_back(argv[i]);
 	}
 
@@ -187,7 +184,6 @@ int main(int argc, char *argv[]) {
 				std::cout << "Decompressing "<< i->string() << std::endl;
 				WriteLas(&las_reader, UncompressPath(*i).string());
 				std::cout << "New file : " << UncompressPath(*i).string() << std::endl;
-
 			}
 			else if (las_header.compressed() == 0)
 			{
@@ -196,7 +192,7 @@ int main(int argc, char *argv[]) {
 		}		
 		else
 		{
-			std::cout << "Error..." << std::endl;
+			std::cout << "Error : no compression or uncompression command define. - Should never happen." << std::endl;
 		}
 	}
 	return 0;
